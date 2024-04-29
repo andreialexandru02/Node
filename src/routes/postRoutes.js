@@ -1,23 +1,13 @@
 const express = require('express');
 const PostController = require('../controllers/postController');
+const { validateCreateOrEditPost, validateGetOrDeletePost } = require('../validations/postValidation');
+const authenticateJWT = require('../utils/authenticateJWT');
 
-const router = express.Router();
+const postRouter = express.Router();
 
-// Define routes and map them to PostController functions
+postRouter.post('/', validateCreateOrEditPost, PostController.createPost);
+postRouter.get('/:id', validateGetOrDeletePost, PostController.getPostById);
+postRouter.put('/:id', authenticateJWT,validateCreateOrEditPost, PostController.updatePost);
+postRouter.delete('/:id', authenticateJWT, validateGetOrDeletePost, PostController.deletePost);
 
-// Create a new post (POST /posts)
-router.post('/', PostController.createPost);
-
-// Get a post by ID (GET /posts/:id)
-router.get('/:id', PostController.getPostById);
-
-// Get all posts (GET /posts)
-router.get('/', PostController.getAllPosts);
-
-// Update a post by ID (PUT /posts/:id)
-router.put('/:id', PostController.updatePost);
-
-// Delete a post by ID (DELETE /posts/:id)
-router.delete('/:id', PostController.deletePost);
-
-module.exports = router;
+module.exports = postRouter;

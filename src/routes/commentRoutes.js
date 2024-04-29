@@ -1,23 +1,13 @@
 const express = require('express');
 const CommentController = require('../controllers/commentController');
+const { validateCreateOrEditComment, validateGetOrDeleteComment } = require('../validations/commentValidation');
+const authenticateJWT = require('../utils/authenticateJWT');
 
-const router = express.Router();
+const commentRouter = express.Router();
 
-// Define routes and map them to CommentController functions
+commentRouter.post('/', validateCreateOrEditComment, CommentController.createComment);
+commentRouter.get('/:id', validateGetOrDeleteComment, CommentController.getCommentById);
+commentRouter.put('/:id', authenticateJWT, validateCreateOrEditComment, CommentController.updateComment);
+commentRouter.delete('/:id', authenticateJWT, validateGetOrDeleteComment, CommentController.deleteComment);
 
-// Create a new comment (POST /comments)
-router.post('/', CommentController.createComment);
-
-// Get a comment by ID (GET /comments/:id)
-router.get('/:id', CommentController.getCommentById);
-
-// Get all comments (GET /comments)
-router.get('/', CommentController.getAllComments);
-
-// Update a comment by ID (PUT /comments/:id)
-router.put('/:id', CommentController.updateComment);
-
-// Delete a comment by ID (DELETE /comments/:id)
-router.delete('/:id', CommentController.deleteComment);
-
-module.exports = router;
+module.exports = commentRouter;

@@ -1,23 +1,13 @@
 const express = require('express');
 const UserController = require('../controllers/userController');
+const { validateCreateOrEditUser, validateGetOrDeleteUser } = require('../validations/userValidation');
+const authenticateJWT = require('../utils/authenticateJWT');
 
-const router = express.Router();
-
-// Define routes and map them to UserController functions
-
-// Create a new user (POST /users)
-router.post('/', UserController.createUser);
-
-// Get a user by ID (GET /users/:id)
-router.get('/:id', UserController.getUserById);
-
-// Get all users (GET /users)
-router.get('/', UserController.getAllUsers);
-
-// Update a user by ID (PUT /users/:id)
-router.put('/:id', UserController.updateUser);
-
-// Delete a user by ID (DELETE /users/:id)
-router.delete('/:id', UserController.deleteUser);
-
-module.exports = router;
+const userRouter = express.Router();
+userRouter.get('/', UserController.getAllUsers);
+userRouter.get('/:id', validateGetOrDeleteUser, UserController.getUserById);
+userRouter.put('/:id', authenticateJWT, validateCreateOrEditUser, UserController.updateUser);
+userRouter.delete('/:id', authenticateJWT, validateGetOrDeleteUser, UserController.deleteUser);
+userRouter.post('/signup', UserController.signUp);
+userRouter.post('/signin', UserController.signIn)
+module.exports = userRouter;

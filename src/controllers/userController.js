@@ -1,18 +1,27 @@
 const UserService = require('../Services/userService');
 
 class UserController {
-    // Handle creating a new user
-    static async createUser(req, res) {
-        const {username, password } = req.body;
+    
+    static async signUp(req, res) {
+        const { username, password } = req.body;
         try {
-            const newUser = await UserService.createUser(username, password);
+            const newUser = await UserService.signUp(username, password);
             res.status(201).json(newUser);
         } catch (error) {
             res.status(500).json({ error: error.message });
         }
     }
 
-    // Handle getting a user by ID
+    static async signIn(req, res) {
+        const { username, password } = req.body;
+        try {
+            const { token, userId } = await UserService.signIn(username, password);
+            res.json({ token, userId });
+        } catch (error) {
+            res.status(401).json({ error: error.message });
+        }
+    }
+  
     static async getUserById(req, res) {
         const { id } = req.params;
         try {
@@ -27,7 +36,7 @@ class UserController {
         }
     }
 
-    // Handle getting all users
+    
     static async getAllUsers(req, res) {
         try {
             const users = await UserService.getAllUsers();
@@ -37,7 +46,7 @@ class UserController {
         }
     }
 
-    // Handle updating a user
+
     static async updateUser(req, res) {
         const { id } = req.params;
         const data = req.body;
@@ -53,7 +62,7 @@ class UserController {
         }
     }
 
-    // Handle deleting a user
+
     static async deleteUser(req, res) {
         const { id } = req.params;
         try {

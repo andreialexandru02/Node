@@ -1,23 +1,58 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
-
+const secretKey = 'my_secret_key'; 
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 class UserService {
-    // Create a new user
-    static async createUser(username, password) {
+
+    static async signUp(username, password) {
         try {
+            // Hash the password with 10 salt rounds
+            const hashedPassword = await bcrypt.hash(password, 10);
+            
+            // Create the new user in the database
             const newUser = await prisma.user.create({
                 data: {
                     username,
-                    password,
+                    password: hashedPassword,
                 },
             });
             return newUser;
         } catch (error) {
-            throw new Error('Error creating user');
+            // Log the error for debugging purposes
+            console.error('Error creating user:', error);
+            
+            // Rethrow the original error message
+            throw new Error(error.message);
         }
     }
+    
 
-    // Get a user by ID
+    static async signIn(username, password) {
+        try {
+            
+            const user = await prisma.user.findUnique({
+                where: { username },
+            });
+
+            
+            if (!user) {
+                throw new Error('Invalid credentials');
+            }
+
+           
+            const isPasswordValid = await bcrypt.compare(password, user.password);
+            if (!isPasswordValid) {
+                throw new Error('Invalid credentials');
+            }
+
+            const token = jwt.sign({ userId: user.id }, secretKey, { expiresIn: '1h' });
+            return { token, userId: user.id };
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    }
+    
     static async getUserById(id) {
         try {
             const user = await prisma.user.findUnique({
@@ -29,7 +64,7 @@ class UserService {
         }
     }
 
-    // Get all users
+
     static async getAllUsers() {
         try {
             const users = await prisma.user.findMany();
@@ -39,7 +74,7 @@ class UserService {
         }
     }
 
-    // Update a user by ID
+
     static async updateUser(id, data) {
         try {
             const updatedUser = await prisma.user.update({
@@ -52,7 +87,7 @@ class UserService {
         }
     }
 
-    // Delete a user by ID
+
     static async deleteUser(id) {
         try {
             const deletedUser = await prisma.user.delete({
