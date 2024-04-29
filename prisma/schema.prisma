@@ -1,0 +1,39 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "sqlite"
+    url      = "file:C:/Users/Asus/Desktop/FACULTATE/FACULTATE ANUL3 SEM2/SQLiteNode/NodeProject.db"
+}
+model User {
+    id       Int      @id @default(autoincrement())
+    username String   @unique
+    password String
+    posts    Post[]   // Relationship: One user has many posts
+    comments Comment[] // Relationship: One user can have many comments
+}
+
+model Post {
+    id      Int      @id @default(autoincrement())
+    title   String
+    content String
+    userId  Int
+    user    User     @relation(fields: [userId], references: [id]) // Relationship: Many posts belong to one user
+    comments Comment[] // Relationship: One post can have many comments
+}
+
+model Comment {
+    id      Int   @id @default(autoincrement())
+    content String
+    userId  Int
+    postId  Int
+    user    User  @relation(fields: [userId], references: [id]) // Relationship: Each comment belongs to one user
+    post    Post  @relation(fields: [postId], references: [id]) // Relationship: Each comment belongs to one post
+}
