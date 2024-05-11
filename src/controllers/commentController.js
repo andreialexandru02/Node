@@ -1,7 +1,7 @@
 const CommentService = require('../services/commentService');
 
 class CommentController {
-    // Handle creating a new comment
+
     static async createComment(req, res) {
         const { content, userId, postId } = req.body;
         try {
@@ -12,7 +12,7 @@ class CommentController {
         }
     }
 
-    // Handle getting a comment by ID
+
     static async getCommentById(req, res) {
         const { id } = req.params;
         try {
@@ -27,7 +27,6 @@ class CommentController {
         }
     }
 
-    // Handle getting all comments
     static async getAllComments(req, res) {
         try {
             const comments = await CommentService.getAllComments();
@@ -37,7 +36,7 @@ class CommentController {
         }
     }
 
-    // Handle updating a comment by ID
+
     static async updateComment(req, res) {
         const { id } = req.params;
         const data = req.body;
@@ -53,7 +52,6 @@ class CommentController {
         }
     }
 
-    // Handle deleting a comment by ID
     static async deleteComment(req, res) {
         const { id } = req.params;
         try {

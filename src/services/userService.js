@@ -7,10 +7,9 @@ class UserService {
 
     static async signUp(username, password) {
         try {
-            // Hash the password with 10 salt rounds
-            const hashedPassword = await bcrypt.hash(password, 10);
             
-            // Create the new user in the database
+            const hashedPassword = await bcrypt.hash(password, 10);
+           
             const newUser = await prisma.user.create({
                 data: {
                     username,
@@ -19,11 +18,9 @@ class UserService {
             });
             return newUser;
         } catch (error) {
-            // Log the error for debugging purposes
+          
             console.error('Error creating user:', error);
-            
-            // Rethrow the original error message
-            throw new Error(error.message);
+                    
         }
     }
     

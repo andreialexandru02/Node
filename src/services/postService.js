@@ -2,7 +2,7 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 class PostService {
-    // Create a new post
+   
     static async createPost(title, content, userId) {
         try {
             const newPost = await prisma.post.create({
@@ -18,13 +18,13 @@ class PostService {
         }
     }
 
-    // Get a post by ID
+  
     static async getPostById(id) {
         try {
             const post = await prisma.post.findUnique({
                 where: { id },
                 include: {
-                    comments: true, // Include related comments
+                    comments: true, 
                 },
             });
             return post;
@@ -33,12 +33,11 @@ class PostService {
         }
     }
 
-    // Get all posts
     static async getAllPosts() {
         try {
             const posts = await prisma.post.findMany({
                 include: {
-                    comments: true, // Include related comments
+                    comments: true, 
                 },
             });
             return posts;
@@ -47,7 +46,7 @@ class PostService {
         }
     }
 
-    // Update a post by ID
+    
     static async updatePost(id, data) {
         try {
             const updatedPost = await prisma.post.update({

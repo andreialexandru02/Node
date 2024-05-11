@@ -1,7 +1,6 @@
 const PostService = require('../services/postService');
 
 class PostController {
-    // Handle creating a new post
     static async createPost(req, res) {
         const { content, title ,userId } = req.body;
         try {
@@ -12,7 +11,6 @@ class PostController {
         }
     }
 
-    // Handle getting a post by ID
     static async getPostById(req, res) {
         const { id } = req.params;
         try {
@@ -27,7 +25,6 @@ class PostController {
         }
     }
 
-    // Handle getting all posts
     static async getAllPosts(req, res) {
         try {
             const posts = await PostService.getAllPosts();
@@ -37,7 +34,7 @@ class PostController {
         }
     }
 
-    // Handle updating a post by ID
+
     static async updatePost(req, res) {
         const { id } = req.params;
         const data = req.body;
@@ -53,7 +50,7 @@ class PostController {
         }
     }
 
-    // Handle deleting a post by ID
+  
     static async deletePost(req, res) {
         const { id } = req.params;
         try {
