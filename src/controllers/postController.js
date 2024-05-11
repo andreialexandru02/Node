@@ -67,6 +67,34 @@ class PostController {
             res.status(500).json({ error: error.message });
         }
     }
+   
+    static async getAllPostsPagination(req, res) {
+        const { page = 1, limit = 3 } = req.body;
+        const offset = (page - 1) * limit;
+        const parsedLimit  = parseInt(limit)
+        try {
+            const posts = await PostService.getAllPostsPagination({ offset, parsedLimit });
+            res.json(posts);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
+    static async getAllPostsAlphabetically(req, res) {
+        try {
+            const posts = await PostService.getAllPostsAlphabetically();
+            res.json(posts);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
+    static async getPostsWithComments(req, res) {
+        try {
+            const posts = await PostService.getPostsWithComments();
+            res.json(posts);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
 }
 
 module.exports = PostController;

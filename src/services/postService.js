@@ -60,7 +60,6 @@ class PostService {
         }
     }
 
-    // Delete a post by ID
     static async deletePost(id) {
         try {
             const deletedPost = await prisma.post.delete({
@@ -71,6 +70,35 @@ class PostService {
             throw new Error('Error deleting post');
         }
     }
-}
+    static async getAllPostsPagination({ offset, parsedLimit }) {
+        try {
+            const posts = await prisma.post.findMany({
+                skip: offset,
+                take: parsedLimit,
+            });
+            return posts;
+        } catch (error) {
+            throw new Error('Error getting paginated posts');
+        }
+    }
+    static async getAllPostsAlphabetically() {
+        try {
+            const posts = await this.getAllPosts();
 
+            return posts.sort((a, b) => a.title.localeCompare(b.title));
+        } catch (error) {
+            throw new Error('Error getting all posts aphabetically');
+        }
+    }
+    static async getPostsWithComments() {
+        try {
+            const posts = await this.getAllPosts();
+
+            return posts.filter(post => post.comments && post.comments.length > 0);
+        } catch (error) {
+            throw new Error('Error getting  posts with commnets');
+        }
+    }
+    
+}
 module.exports = PostService;

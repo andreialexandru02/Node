@@ -6,6 +6,7 @@ const authenticateJWT = require('../utils/authenticateJWT');
 const commentRouter = express.Router();
 
 commentRouter.post('/', validateCreateOrEditComment, CommentController.createComment);
+commentRouter.get('/', CommentController.getAllComments);
 commentRouter.get('/:id', validateGetOrDeleteComment, CommentController.getCommentById);
 commentRouter.put('/:id', authenticateJWT, validateCreateOrEditComment, CommentController.updateComment);
 commentRouter.delete('/:id', authenticateJWT, validateGetOrDeleteComment, CommentController.deleteComment);
